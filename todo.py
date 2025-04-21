@@ -44,7 +44,7 @@ option_handlers = {
 
 
 
-def userTodo():
+def user_todo():
     # option = input("What would you like to do ?")
     option_list()
     
@@ -66,4 +66,4 @@ def option_list():
 
 
 
-userTodo()
+user_todo()
