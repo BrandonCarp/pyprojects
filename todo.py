@@ -1,8 +1,6 @@
 # Description: Create a command-line or simple GUI to-do list app that allows the user to add, remove, and update tasks. This project will help with working with lists and user input.
 
 
-
-
 # Also, list_handler is defined after the function handle_add(), so when Python hits that function, it doesn't yet know what list_handler is.
 
 # 🤔 Here's how you can think about it:
@@ -14,15 +12,23 @@
 
 # You’re on the right track—just need to think through how that data flows and how to add to a dictionary the proper way. Wanna try fixing that handle_add() with those hints, or need a little more nudge?
 
+# - Check if the dictionary is empty.
+# - Get the highest existing key safely.
+# - Increment the key for the new task.
+# - Store the new task in the dictionary.
+
+
+
+
 import questionary
 
 list_handler = {
  
 }
 
-
+# find highest key # in list_handler and +1 to it for new tasks
 def handle_add():
-    list_handler.update({"Task": input("Add Task"), "Completation Status": "TBD"})
+    list_handler.keys().max(+1) = value
     print(list_handler[{0}])
 
 def handle_delete():
@@ -61,7 +67,6 @@ def option_list():
         handler()
     else:
         print("Invalid choice")
-
 
 
 
