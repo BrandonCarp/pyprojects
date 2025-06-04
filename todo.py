@@ -1,42 +1,34 @@
 # Description: Create a command-line or simple GUI to-do list app that allows the user to add, remove, and update tasks. This project will help with working with lists and user input.
 
 
-# Also, list_handler is defined after the function handle_add(), so when Python hits that function, it doesn't yet know what list_handler is.
-
-# 🤔 Here's how you can think about it:
-# If you want to store tasks with a simple number as the key (like an auto-incrementing ID), how would you find the next available number?
-
-# Since list_handler is a dictionary, how do you assign a new key-value pair to it?
-
-# How will you let the functions access list_handler if it’s defined outside them?
-
-# You’re on the right track—just need to think through how that data flows and how to add to a dictionary the proper way. Wanna try fixing that handle_add() with those hints, or need a little more nudge?
-
-# - Check if the dictionary is empty.
-# - Get the highest existing key safely.
-# - Increment the key for the new task.
-# - Store the new task in the dictionary.
-
 
 
 
 import questionary
 
-list_handler = {
- 
-}
+task_list = {}  # Dictionary for task storage
 
-# find highest key # in list_handler and +1 to it for new tasks
 def handle_add():
-    list_handler.keys().max(+1) = value
-    print(list_handler[{0}])
+    new_key = max(task_list.keys(), default=-1) + 1
+    task_list[new_key] = questionary.text("Enter task description:").ask()
+    print(f"Added task {new_key}: {task_list[new_key]}")
 
 def handle_delete():
-    print("list_handler")
-    print("You selected Delete")
+    task_id = int(questionary.text("Enter task ID to delete:").ask())
+    if task_id in task_list:
+        del task_list[task_id]
+        print(f"Deleted task {task_id}")
+    else:
+        print("Invalid ID")
 
 def handle_edit():
-    print("You selected Edit")
+    task_id = int(questionary.text("Enter task ID to edit:").ask())
+    if task_id in task_list:
+        new_task = questionary.text("Enter new task description:").ask()
+        task_list[task_id] = new_task
+        print(f"Updated task {task_id}: {new_task}")
+    else:
+        print("Invalid ID")
 
 def handle_exit():
     print("You selected Exit")
