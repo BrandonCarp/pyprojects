@@ -22,6 +22,7 @@ def handle_delete():
         print("Invalid ID")
 
 def handle_edit():
+    print(task_list.keys())
     task_id = int(questionary.text("Enter task ID to edit:").ask())
     if task_id in task_list:
         new_task = questionary.text("Enter new task description:").ask()
