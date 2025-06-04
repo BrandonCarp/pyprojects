@@ -3,10 +3,35 @@
 
 
 
-
+import json
+import os
 import questionary
 
-task_list = {}  # Dictionary for task storage
+
+FILENAME = "tasks.json"
+
+def load_tasks():
+    if os.path.exists(FILENAME):
+        with open(FILENAME, "r") as f:
+            return {int(k): v for k, v in json.load(f).items()}  # Convert keys back to int
+    return {}
+
+def save_tasks():
+    with open(FILENAME, "w") as f:
+        json.dump(task_list, f)
+
+# Load tasks at startup
+task_list = load_tasks()
+
+def handle_view():
+    if not task_list:
+        print("No tasks.")
+    else:
+        for tid, desc in task_list.items():
+            print(f"[{tid}] {desc}")
+
+    option_handlers["View"] = handle_view
+
 
 def handle_add():
     new_key = max(task_list.keys(), default=-1) + 1
@@ -35,6 +60,7 @@ def handle_exit():
     print("You selected Exit")
 
 option_handlers = {
+    "View": handle_view,
     "Add": handle_add,
     "Delete": handle_delete,
     "Edit": handle_edit,
