@@ -1,8 +1,3 @@
-# Description: Create a command-line or simple GUI to-do list app that allows the user to add, remove, and update tasks. This project will help with working with lists and user input.
-
-
-
-
 import json
 import os
 import questionary
@@ -18,7 +13,8 @@ def load_tasks():
 
 def save_tasks():
     with open(FILENAME, "w") as f:
-        json.dump(task_list, f)
+        json.dump({str(k): v for k, v in task_list.items()}, f)
+
 
 # Load tasks at startup
 task_list = load_tasks()
@@ -30,19 +26,28 @@ def handle_view():
         for tid, desc in task_list.items():
             print(f"[{tid}] {desc}")
 
-    option_handlers["View"] = handle_view
+   
 
 
 def handle_add():
     new_key = max(task_list.keys(), default=-1) + 1
     task_list[new_key] = questionary.text("Enter task description:").ask()
     print(f"Added task {new_key}: {task_list[new_key]}")
+    save_tasks()
+    handle_view()
 
 def handle_delete():
-    task_id = int(questionary.text("Enter task ID to delete:").ask())
+    handle_view()
+    try:
+        task_id = int(questionary.text("Enter task ID to delete:").ask())
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+        return
     if task_id in task_list:
         del task_list[task_id]
         print(f"Deleted task {task_id}")
+        save_tasks()
+        handle_view()
     else:
         print("Invalid ID")
 
@@ -53,11 +58,17 @@ def handle_edit():
         new_task = questionary.text("Enter new task description:").ask()
         task_list[task_id] = new_task
         print(f"Updated task {task_id}: {new_task}")
+        save_tasks()
+        handle_view()
     else:
         print("Invalid ID")
 
 def handle_exit():
-    print("You selected Exit")
+    save_tasks()
+    print("Changes saved. Exiting...")
+    return True
+
+    
 
 option_handlers = {
     "View": handle_view,
@@ -70,24 +81,28 @@ option_handlers = {
 
 
 def user_todo():
-    # option = input("What would you like to do ?")
     option_list()
     
 
 
 def option_list():
-    choice = questionary.select(
-        "What do you want to do?",
-        choices=list(option_handlers.keys())
-    ).ask()
+    while True:
+        choice = questionary.select(
+            "What do you want to do?",
+            choices=list(option_handlers.keys())
+        ).ask()
 
-    handler = option_handlers.get(choice)
-    if handler:
-        handler()
-    else:
-        print("Invalid choice")
+        handler = option_handlers.get(choice)
 
-
+        if handler:
+            if handler == handle_exit:
+                handler()     
+                break         
+            else:
+                handler()
+        else:
+            print("Invalid choice")
+  
 
 
 user_todo()
